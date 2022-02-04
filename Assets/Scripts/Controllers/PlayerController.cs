@@ -56,18 +56,16 @@ public class PlayerController : MonoBehaviour
         }
 
         //애니메이션
-        wait_run_ratio = Mathf.Lerp(wait_run_ratio, 1, 10.0f * Time.deltaTime);
         Animator anim = GetComponent<Animator>();
-        anim.SetFloat("wait_run_ratio", wait_run_ratio);
-        anim.Play("WAIT_RUN");
+        // 현재 게임 상태에 대한 정보를 애니메이터에게 넘겨준다. 
+        anim.SetFloat("Speed", _speed);
+
     }
 
     void UpdateIdle()
     {
-        wait_run_ratio = Mathf.Lerp(wait_run_ratio, 0, 10.0f * Time.deltaTime);
         Animator anim = GetComponent<Animator>();
-        anim.SetFloat("wait_run_ratio", wait_run_ratio);
-        anim.Play("WAIT_RUN");
+        anim.SetFloat("Speed", 0);
     }
 
     void Update()
