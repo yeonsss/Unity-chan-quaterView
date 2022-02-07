@@ -15,10 +15,21 @@ public class Managers : MonoBehaviour
     static Managers Instance { get { Init();  return s_Instance; }   }
     // 유일한 매니저를 갖고 있다.
 
+    DataManager _data = new DataManager();
     InputManager _input = new InputManager();
+    PoolManager _pool = new PoolManager();
     ResourceManager _resource = new ResourceManager();
+    SceneManagerEx _scene = new SceneManagerEx();
+    SoundManager _sound = new SoundManager();
+    UIManager _ui = new UIManager();
+
+    public static DataManager Data { get { return Instance._data; } }
     public static InputManager Input { get { return Instance._input; } }
+    public static PoolManager Pool { get { return Instance._pool; } }
     public static ResourceManager Resource { get { return Instance._resource; } }
+    public static SceneManagerEx Scene { get { return Instance._scene; } }
+    public static SoundManager Sound { get { return Instance._sound; } }
+    public static UIManager UI { get { return Instance._ui; } }
 
     void Start()
     {
@@ -55,6 +66,22 @@ public class Managers : MonoBehaviour
             }
 
             DontDestroyOnLoad(go);
+            
             s_Instance = go.GetComponent<Managers>();
-        }    }
+            // Instance안에 또 Instance를 호출하지 말것 => 무한루프
+            s_Instance._data.Init();
+            s_Instance._sound.Init();
+            s_Instance._pool.Init();
+        }
+    }
+    // 씬 이동시 날려줘야 하는 친구들 모음
+    public static void Clear()
+    {
+        Sound.Clear();
+        Input.Clear();
+        UI.Clear();
+        Scene.Clear();
+
+        Pool.Clear();
+    }
 }

@@ -1,0 +1,67 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SoundManager
+{
+    AudioSource[] _audioSource = new AudioSource[(int)Define.Sound.MaxCount];
+    // MP3 Player -> AudioSource
+    // Mp3 음원 -> AudioClip
+    // 관객(귀) -> AudioListener
+
+    public void Init()
+    {
+        GameObject root = GameObject.Find("@Sound");
+        if (root == null)
+        {
+            root = new GameObject { name = "@Sound" };
+            Object.DontDestroyOnLoad(root);
+            // 이건 사라지지 않는 오브젝트를 만들때 사용. 단 남발시 메모리 낭비가 심하니 주의할 것,
+
+            string[] soundNames = System.Enum.GetNames(typeof(Define.Sound));
+
+            for(int i = 0; i < soundNames.Length - 1; i++)
+            {
+                GameObject go = new GameObject { name = soundNames[i] };
+                root.transform.parent = parent(root);
+            }
+        }
+    }
+
+    public void Play(Define.Sound type, string path, float pitch = 1.0f)
+    {
+        if (path.Contains("Sounds/") == false)
+        {
+            path = $"Sounds/{path}";
+        }
+
+        if (type == Define.Sound.Bgm)
+        {
+            AudioClip audioClip = Managers.Resource.Load<AudioClip>(path);
+            if (audioClip == null)
+            {
+                Debug.Log($"AudioClip Missing ! {path}");
+                return;
+            }
+
+            
+        }
+        else
+        {
+            AudioClip audioClip = Managers.Resource.Load<AudioClip>(path);
+            if (audioClip == null)
+            {
+                Debug.Log($"AudioClip Missing ! {path}");
+                return;
+            }
+
+            AudioSource audioSource = _audioSource[(int)Define.Sound.Effect];
+            audioSource.pitch = pitch;
+            audioSource.PlayOneShot(audioClip);
+        }
+    }
+
+
+
+
+}
